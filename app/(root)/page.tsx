@@ -20,6 +20,8 @@ export default function Home() {
   const [sortBy, setSortBy] = useState("firstName");
   const [sortOrder, setSortOrder] = useState("asc");
 
+  const [status, setStatus] = useState("");
+
   const [isOpenEditForm, setIsOpenEditForm] = useState<boolean>(false);
   const [isOpenAddForm, setIsOpenAddForm] = useState<boolean>(false);
 
@@ -104,7 +106,12 @@ export default function Home() {
   const handleSave = () => {
     if (selectedUser) {
       // Validation logic
-      if (!selectedUser.firstName || !selectedUser.email || !selectedUser.age || !selectedUser.role) {
+      if (
+        !selectedUser.firstName ||
+        !selectedUser.email ||
+        !selectedUser.age ||
+        !selectedUser.role
+      ) {
         alert("Please fill in all fields correctly.");
         return; // Exit the function if validation fails
       }
@@ -174,15 +181,34 @@ export default function Home() {
     setIsOpenAddForm(false); // Close the add form
   };
 
+  const filteredUsers = status
+    ? users.filter((user) => user.role === status) // Filter users by selected status
+    : users; // If no status is selected, show all users
+
   return (
     <section className="mt-5 container px-5">
       <h1>Data Tech</h1>
-      <button
-        onClick={() => setIsOpenAddForm(true)}
-        className="mt-4 bg-green-500 text-white p-2"
-      >
-        Add User
-      </button>
+      <div className="flex justify-between">
+        <button
+          onClick={() => setIsOpenAddForm(true)}
+          className="mt-4 bg-green-500 text-white p-2"
+        >
+          Add User
+        </button>
+
+        <select
+          value={status}
+          onChange={(e) => {
+            setStatus(e.target.value);
+          }}
+          className="border p-2"
+        >
+          <option value="">All</option>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+        </select>
+      </div>
+
       <table className="w-full mt-2 ">
         <thead className="border-b">
           <tr>
@@ -231,7 +257,7 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <tr key={user.id}>
               <td className="border border-slate-700 p-3">{user.firstName}</td>
               <td className="border border-slate-700 p-3">{user.email}</td>
@@ -348,7 +374,12 @@ export default function Home() {
             type="button"
             onClick={() => {
               // Validation logic
-              if (!selectedUser?.firstName || !selectedUser?.email || !selectedUser?.age || !selectedUser?.role) {
+              if (
+                !selectedUser?.firstName ||
+                !selectedUser?.email ||
+                !selectedUser?.age ||
+                !selectedUser?.role
+              ) {
                 alert("Please fill in all fields correctly.");
                 return;
               }
@@ -362,7 +393,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => {
-              setIsOpenAddForm(false)
+              setIsOpenAddForm(false);
             }}
             className="mt-2 ml-2 bg-blue-500 text-white p-2"
           >
@@ -460,7 +491,7 @@ export default function Home() {
           <button
             type="button"
             onClick={() => {
-              setIsOpenEditForm(false)
+              setIsOpenEditForm(false);
             }}
             className="mt-2 ml-2 bg-blue-500 text-white p-2"
           >
